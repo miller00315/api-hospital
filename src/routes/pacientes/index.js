@@ -3,12 +3,12 @@ const router = express.Router();
 
 const Pacientes = require('../../models/pacientes');
 
-router.use(function timeLog(req, res, next) {
+router.use(async function timeLog(req, res, next) {
   console.log('Paciente time: ', Date.now());
   next();
 })
 
-.get('/', function(_, res) {//recuperar todos os usuários
+.get('/', async function(_, res) {//recuperar todos os usuários
   Pacientes.find(function(error, pacientes){
     if(error){
       res.status(404).send(error);
@@ -18,7 +18,7 @@ router.use(function timeLog(req, res, next) {
   });
 })
 
-.get('/:id_paciente', function(req, res) {//buscar usuário por id
+.get('/:id_paciente', async function(req, res) {//buscar usuário por id
 
   Pacientes.findById(req.params.id_paciente, function(erro, paciente) {
     if(erro) {
@@ -29,7 +29,7 @@ router.use(function timeLog(req, res, next) {
   });
 })
 
-.get('/:parametro/:valor', function(req, res) {//buscar usuário por parametro
+.get('/:parametro/:valor', async function(req, res) {//buscar usuário por parametro
   let consulta = {};
   consulta[req.params.parametro] = new RegExp(req.params.valor,'i');
 
@@ -43,7 +43,7 @@ router.use(function timeLog(req, res, next) {
   });
 })
 
-.post('/', function(req, res){//inserir novo dado
+.post('/', async function(req, res){//inserir novo dado
   let paciente = new Pacientes();
  
   paciente.nome = req.body.nome;
@@ -59,7 +59,7 @@ router.use(function timeLog(req, res, next) {
   });
 })
 
-.patch('/:id_paciente', function(req, res){//atualizar dados parciais
+.patch('/:id_paciente', async function(req, res){//atualizar dados parciais
   Pacientes.findByIdAndUpdate(
     req.params.id_paciente,
     req.body,
@@ -74,7 +74,7 @@ router.use(function timeLog(req, res, next) {
     );
 })
 
-.put('/:id_paciente', function(req, res){//altero todo os dados
+.put('/:id_paciente', async function(req, res){//altero todo os dados
   Pacientes.replaceOne(
     {"_id": req.params.id_paciente},
     req.body,
@@ -88,7 +88,7 @@ router.use(function timeLog(req, res, next) {
   );
 })
 
-.delete('/:id_paciente', function(req, res){//excluo um item específico
+.delete('/:id_paciente', async function(req, res) {//excluo um item específico
 
   Pacientes.findByIdAndRemove(
     req.params.id_paciente,

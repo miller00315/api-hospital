@@ -3,12 +3,12 @@ const router = express.Router();
 
 const Profissionais = require('../../models/profissionais');
 
-router.use(function timeLog(req, res, next) {
+router.use(async function timeLog(req, res, next) {
   console.log('Profissionais time: ', Date.now());
   next();
 })
 
-.get('/', function(_, res) {//recuperar todos os usuários
+.get('/', async function(_, res) {//recuperar todos os usuários
   Profissionais.find(function(error, profissionais){
     if(error){
       res.status(404).send(error);
