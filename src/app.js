@@ -1,17 +1,27 @@
 const express = require('express');//importação do pacote
 const cors = require('cors');//importação do cors
+const path = require('path');
+const session = require('express-session');
 const  mongoose = require('mongoose');// importação mongoose
 const bodyParser = require('body-parser');//importação do body parser
 
-process.env.NODE_ENV = 'development';
-
-const Pacientes = require('./routes/pacientes');//instanciando a rota pacientes
-const Profissionais = require('./routes/profissionais');
-const config = require('./config');
+require('./config');//importo o arquivo de configuração
+require('./models/profissionais');
+require('./models/pacientes');
+require('./config/passport');
 
 const app = express();//instanciando express
 
 mongoose.Promise = global.Promise;
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+app.use(cors());//aplicando cors
+app.use(bodyParser.urlencoded({ extended: false }));//aplicando bodyParser.urlencoded
+app.use(bodyParser.json());//aplicando bodyParser.json
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'hospital-api', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+app.use(require('./routes'));
 
 mongoose.connect(global.gConfig.database, 
   {useMongoClient: true}, 
@@ -24,11 +34,35 @@ mongoose.connect(global.gConfig.database,
     }
 });
 
-app.use(cors());//aplicando cors
-app.use(bodyParser.urlencoded({ extended: false }));//aplicando bodyParser.urlencoded
-app.use(bodyParser.json());//aplicando bodyParser.json
-app.use('/pacientes', Pacientes);//aplicando o model Pacientes
-app.use('/profissionais', Profissionais);//aplicando o model Profissionais
+mongoose.set('debug', true);
+
+if(!isProduction) {
+  app.use((err, req, res) => {
+    res.status(err.status || 500);
+
+    res.json({
+      errors: {
+        message: err.message,
+        error: err,
+      },
+    });
+  });
+}
+
+app.use((err, req, res) => {
+  res.status(err.status || 500);
+
+  res.json({
+    errors: {
+      message: err.message,
+      error: {},
+    },
+  });
+});
+
+app.use((erro, req, res, next) => {
+  res.status(erro.status).send(erro);
+});
 
 app.listen(global.gConfig.node_port, () => {
   console.log(`${global.gConfig.app_name} escutando na porta ${global.gConfig.node_port}`);
