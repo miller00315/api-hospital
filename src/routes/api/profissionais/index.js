@@ -5,6 +5,7 @@ const blacklist = require('express-jwt-blacklist');
 
 const Profissionais = require('../../../models/profissionais');
 const auth = require('../../../auth');
+const profissionaisController = require('../../../controllers/profissionais');
 
 router.use(async (err, req, res, next) => {
 
@@ -15,16 +16,7 @@ router.use(async (err, req, res, next) => {
     });
 })
 
-.get('/', auth.required, async function(req, res, next) {//recuperar todos os usuários
- 
-      Profissionais.find(function(error, profissionais){
-        if(error){
-          res.status(404).send(error);
-        } else {
-          res.status(200).send(profissionais);
-        }
-      });
-})
+.get('/', auth.required, profissionaisController.getProfissionais)
 
 .post('/', auth.optional, function(req, res, next){
   const {body: {profissional}} = req;
@@ -53,39 +45,7 @@ router.use(async (err, req, res, next) => {
   
 })
 
-.post('/login', auth.optional, function(req, res, next){
-
-  const {body: {profissional}} = req;
-
-  if(!profissional.email) {
-    return res.status(422).json({
-      email: 'precisamos de um email',
-    });
-  }
-
-  if(!profissional.password) {
-    return res.status(422).json({
-      password: 'precisamos de uma senha',
-    });
-  }
-
-  return passaport.authenticate(
-    'local', {session: false}, function (erro, passaportProfessional, info) {
-      if(erro) {
-        return next(erro);
-      }
-
-      if(passaportProfessional) {
-        const profissional = passaportProfessional;
-        profissional.token = passaportProfessional.generateJWT();
-
-        return res.json({professional: profissional.toAuthJSON()})
-      }
-
-      return  res.status(400).info;
-    })(req, res, next);
-
-})
+.post('/login', auth.optional, profissionaisController.profissionaisLogin)
 
 .post('/logout', auth.required, async function(req, res, next){
   const { payload } = req;
