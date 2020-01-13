@@ -44,7 +44,6 @@ if(!isProduction) {
       console.log(error);
     } 
     console.log('saida', stdout);
-  
   });
 }
 

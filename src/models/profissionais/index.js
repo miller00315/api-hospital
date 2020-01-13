@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const randtoken = require('rand-token');
+const randtoken = require('rand-token').generator;
 
 const ProfisionalSchema = new Schema({
   nome: String,
@@ -28,21 +28,17 @@ ProfisionalSchema.methods.validatePassword = function(password) {
 
 ProfisionalSchema.methods.generateJWT = function() {
 
-  //const profissional = this;
-
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
 
   const token = jwt.sign({
+    jti: this.id,
     email: this.email,
     id: this._id,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
   }, global.gConfig.jwt_key);
 
- // profissional.tokens.push({token});
-
- // profissional.update();
 
   return token;
 }
