@@ -47,10 +47,9 @@ ProfisionalSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
     email: this.email,
-    token: this.generateJWT(),
+    token: this.token,
     tipo: this.tipo,
     nome: this.nome,
-    tokens: this.tokens,
     sobrenome: this.sobrenome,
   };
 };
