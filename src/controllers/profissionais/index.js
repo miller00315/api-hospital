@@ -2,7 +2,7 @@ const blacklist = require('express-jwt-blacklist');
 const passaport = require('passport');
 const Profissionais = require('../../models/profissionais');
 
-exports.profissionaisLogin = async function(req, res, next) {
+exports.loginProfissionais = async function(req, res, next) {
   const {body: {profissional}} = req;
 
   if(!profissional.email) {
@@ -43,4 +43,85 @@ exports.getProfissionais = async function(req, res, next) {
       res.status(200).send(profissionais);
     }
   });
+}
+
+exports.createProfissionais = async function(req, res, next) {
+  const {body: {profissional}} = req;
+
+  if(!profissional.email) {
+    return res.status(422).json({
+      email: 'precisamos de um email',
+    });
+  }
+
+  if(!profissional.password) {
+    return res.status(422).json({
+      password: 'precisamos de uma senha',
+    });
+  }
+
+  const finalProfessional = new Profissionais(profissional);
+  
+  finalProfessional.setPassword(profissional.password);
+
+  return finalProfessional.save().then(
+    function(){
+      res.json({ profissional: finalProfessional.toAuthJSON()})
+    }
+  );
+}
+
+exports.logoutProfissionais = async function(req, res, next) {
+  const { payload } = req;
+
+  blacklist.revoke(payload, function(error) {
+    if(error) {
+      res.status(500).json({
+        'status': 500,
+        'data': error,
+      });
+    } else {
+      res.status(200).json({
+        'status': 200,
+        'data': 'You are logged out',
+      });
+    }
+  });
+}
+
+exports.currentProfessionais = async function(req, res, next) {
+  const { payload: { id } } = req;
+
+  Profissionais.findById(id, function(erro, profissional) {
+    if(erro){
+      res.status(401).send(erro);
+    } else {
+      res.status(200).send(profissional);
+    }
+  });
+}
+
+exports.deleteProfessionais = async function(req, res, next) {
+  Profissionais.findByIdAndRemove(
+    req.params.id_profissional,
+    function(erro, resultado) {
+      if(erro) {
+        res.status(404).send(erro);
+      } else {
+        res.status(200).send(resultado);
+      }
+    }
+  );
+}
+
+exports.invalidRoute = async function(req, res, next) {
+  res.status(404).json({message: 'Rota inexistente'});
+}
+
+exports.routerError = async function(err, req, res, next) {
+  res.status(err.status)
+    .json({
+      status: err.status,
+      message: err.message
+    });
 }

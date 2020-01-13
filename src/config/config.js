@@ -7,7 +7,8 @@ const config = {
     "app_desc": "Api para o aplicativo do hospital",
     "node_port": process.env.PORT,
     "database": process.env.DATA_BASE,
-    "jwt_key": "api-hospital"
+    "jwt_key": "api-hospital",
+    "redis_port": process.env.REDIS_PORT 
   },
   "testing": {
     "config_id": "testing",

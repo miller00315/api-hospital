@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');//importação do body parser
 require('./config');//importo o arquivo de configuração
 require('./models/profissionais');
 require('./models/pacientes');
-require('./config/passport');
+require('./auth/passport');
 
 const app = express();//instanciando express
 
