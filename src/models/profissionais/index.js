@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const randtoken = require('rand-token');
 
 const ProfisionalSchema = new Schema({
   nome: String,
@@ -10,6 +11,9 @@ const ProfisionalSchema = new Schema({
   hash: String,
   salt: String,
   email: String,
+  token: String,
+}, {
+  usePushEach: true
 });
 
 ProfisionalSchema.methods.setPassword = function(password) {
@@ -23,15 +27,24 @@ ProfisionalSchema.methods.validatePassword = function(password) {
 };
 
 ProfisionalSchema.methods.generateJWT = function() {
+
+  //const profissional = this;
+
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
 
-  return jwt.sign({
+  const token = jwt.sign({
     email: this.email,
     id: this._id,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
-  }, 'secret');
+  }, global.gConfig.jwt_key);
+
+ // profissional.tokens.push({token});
+
+ // profissional.update();
+
+  return token;
 }
 
 ProfisionalSchema.methods.toAuthJSON = function() {
@@ -41,6 +54,7 @@ ProfisionalSchema.methods.toAuthJSON = function() {
     token: this.generateJWT(),
     tipo: this.tipo,
     nome: this.nome,
+    tokens: this.tokens,
     sobrenome: this.sobrenome,
   };
 };

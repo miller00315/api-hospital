@@ -1,7 +1,8 @@
 const express = require('express');//importação do pacote
+const {execFile} = require('child_process');
 const cors = require('cors');//importação do cors
-const path = require('path');
-const session = require('express-session');
+const path = require('path');//inportação da path
+const session = require('express-session');//importação session
 const  mongoose = require('mongoose');// importação mongoose
 const bodyParser = require('body-parser');//importação do body parser
 
@@ -37,27 +38,30 @@ mongoose.connect(global.gConfig.database,
 mongoose.set('debug', true);
 
 if(!isProduction) {
-  app.use((err, req, res) => {
-    res.status(err.status || 500);
 
-    res.json({
-      errors: {
-        message: err.message,
-        error: err,
-      },
-    });
+  execFile('c:/redis/redis-server.exe', function (error, stdout){
+    if(error){
+      console.log(error);
+    } 
+    console.log('saida', stdout);
+  
   });
 }
 
-app.use((err, req, res) => {
-  res.status(err.status || 500);
+app.get("*", (req, res) => {
+  res.status(404).json({message: 'Rota inexistente'});
+})
 
-  res.json({
-    errors: {
-      message: err.message,
-      error: {},
-    },
-  });
+.put("*", (req, res) => {
+  res.status(404).json({message: 'Rota inexistente'});
+})
+
+.post("*", (req, res) => {
+  res.status(404).json({message: 'Rota inexistente'});
+})
+
+.patch("*", (req, res) => {
+  res.status(404).json({message: 'Rota inexistente'});
 });
 
 app.use((erro, req, res, next) => {
