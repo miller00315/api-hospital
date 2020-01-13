@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const randtoken = require('rand-token').generator;
+const randtoken = require('rand-token');
 
 const ProfisionalSchema = new Schema({
   nome: String,
@@ -33,7 +33,7 @@ ProfisionalSchema.methods.generateJWT = function() {
   expirationDate.setDate(today.getDate() + 60);
 
   const token = jwt.sign({
-    jti: this.id,
+    jti: this.id +'_'+randtoken.generate(6),
     email: this.email,
     id: this._id,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
