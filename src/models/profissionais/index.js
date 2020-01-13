@@ -39,7 +39,6 @@ ProfisionalSchema.methods.generateJWT = function() {
     exp: parseInt(expirationDate.getTime() / 1000, 10),
   }, global.gConfig.jwt_key);
 
-
   return token;
 }
 
