@@ -26,7 +26,7 @@ router.use(async (err, req, res, next) => {
         }
       });
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .post('/', auth.optional, function(req, res, next){
@@ -103,7 +103,7 @@ router.use(async (err, req, res, next) => {
         res.status(500).json({status: 500, error: error});
       }
     }
-  }); 
+  }).catch(erro => res.status(erro.code).send(erro)); 
 })
 
 .get('/current', auth.required, function(req, res, next){
@@ -119,7 +119,7 @@ router.use(async (err, req, res, next) => {
         }
       });
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .delete('/:id_profissional', auth.required, async function(req, res) {//excluo um item específico
@@ -136,7 +136,7 @@ router.use(async (err, req, res, next) => {
         }
       );
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .get("*", (req, res) => {

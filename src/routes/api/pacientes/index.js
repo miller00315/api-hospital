@@ -24,7 +24,7 @@ router.use(async (err, req, res, next) => {
         }
       });
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .get('/:id_paciente', auth.required, async function(req, res) {//buscar usuário por id
@@ -38,7 +38,7 @@ router.use(async (err, req, res, next) => {
         }
       });
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .get('/:parametro/:valor', auth.required, async function(req, res) {//buscar usuário por parametro
@@ -57,7 +57,7 @@ router.use(async (err, req, res, next) => {
           }
       });
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .post('/', auth.required, async function(req, res){//inserir novo dado
@@ -78,7 +78,7 @@ router.use(async (err, req, res, next) => {
         }
       });
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .patch('/:id_paciente', auth.required, async function(req, res){//atualizar dados parciais
@@ -97,7 +97,7 @@ router.use(async (err, req, res, next) => {
           }
         );
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .put('/:id_paciente', auth.required, async function(req, res){//altero todo os dados
@@ -116,7 +116,7 @@ router.use(async (err, req, res, next) => {
           }
       );
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .delete('/:id_paciente', auth.required, async function(req, res) {//excluo um item específico
@@ -133,7 +133,7 @@ router.use(async (err, req, res, next) => {
         }
       );
     }
-  });
+  }).catch(erro => res.status(erro.code).send(erro));
 })
 
 .get("*", (req, res) => {

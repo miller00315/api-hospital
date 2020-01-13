@@ -5,14 +5,17 @@ async function checkBlackList(req, res) {
   
   const { headers: { authorization } } = req;
 
-  const result = new Promise(resolve => {
+  const result = new Promise((resolve, reject) => {
     redisClient.lrange('authorization', 0, -1, 
-    function(err, result){
-      if(result.indexOf(authorization) > -1) {
-        res.status(401).json({status: 401, error: 'Este token está na black list'});
-        resolve(null);
+    function(erro, result){
+      if(erro) {
+        reject({code: 500, error: erro});
       } else {
-        resolve(authorization);
+        if(result.indexOf(authorization) > -1) {
+          reject({code: 401, error: 'Este token está na black list'});
+        } else {
+          resolve(authorization);
+        }
       }
     });
   })
