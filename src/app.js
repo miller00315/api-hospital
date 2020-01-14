@@ -23,6 +23,7 @@ app.use(bodyParser.json());//aplicando bodyParser.json
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'hospital-api', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 app.use(require('./routes'));
+app.disable('x-powered-by');
 
 mongoose.connect(global.gConfig.database, 
   {useMongoClient: true}, 
