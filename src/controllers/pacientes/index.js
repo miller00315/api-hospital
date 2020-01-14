@@ -1,6 +1,6 @@
 const Pacientes = require('../../models/pacientes');
 
-exports.getPacientes = async function(req, res) {//recuperar todos os usuários
+exports.getPacientes = async function(_, res) {//recuperar todos os usuários
   
   Pacientes.find(function(error, pacientes){
     if(error){
@@ -99,11 +99,11 @@ exports.deletePacientes = async function(req, res) {//excluo um item específico
   );
 }
 
-exports.invalidRoute = async function(req, res, next){
+exports.invalidRoute = async function(_, res, next){
   res.status(404).json({message: 'Rota inexistente'});
 }
 
-exports.routerError = async function(err, req, res, next) {
+exports.routerError = async function(err, _, res, next) {
   res.status(err.status)
     .json({
       status: err.status,

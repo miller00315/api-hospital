@@ -35,7 +35,7 @@ exports.loginProfissionais = async function(req, res, next) {
 
 }
 
-exports.getProfissionais = async function(req, res, next) {
+exports.getProfissionais = async function(_, res, next) {
   Profissionais.find(function(error, profissionais){
     if(error){
       res.status(404).send(error);
@@ -114,11 +114,11 @@ exports.deleteProfessionais = async function(req, res, next) {
   );
 }
 
-exports.invalidRoute = async function(req, res, next) {
+exports.invalidRoute = async function(_, res, next) {
   res.status(404).json({message: 'Rota inexistente'});
 }
 
-exports.routerError = async function(err, req, res, next) {
+exports.routerError = async function(err, _, res, next) {
   res.status(err.status)
     .json({
       status: err.status,
