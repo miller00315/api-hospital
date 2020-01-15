@@ -16,6 +16,8 @@ router.use(profissionaisController.routerError)
 
 .get('/current', auth.required, profissionaisController.currentProfessionais)
 
+.get('/:parametro/:valor', auth.required, profissionaisController.getProfissionaisByParameter)
+
 .delete('/:id_profissional', auth.required, profissionaisController.deleteProfessionais)
 
 .get("*", profissionaisController.invalidRoute)

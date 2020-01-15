@@ -2,6 +2,8 @@ const express = require('express');//importação do pacote
 const {execFile} = require('child_process');
 const cors = require('cors');//importação do cors
 const path = require('path');//inportação da path
+const helmet = require('helmet');
+const compression = require('compression');
 const session = require('express-session');//importação session
 const  mongoose = require('mongoose');// importação mongoose
 const bodyParser = require('body-parser');//importação do body parser
@@ -18,8 +20,10 @@ mongoose.Promise = global.Promise;
 const isProduction = process.env.NODE_ENV === 'production';
 
 app.use(cors());//aplicando cors
+app.use(helmet());//impedir ataques desconhecidos
 app.use(bodyParser.urlencoded({ extended: false }));//aplicando bodyParser.urlencoded
 app.use(bodyParser.json());//aplicando bodyParser.json
+app.use(compression()); //Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'hospital-api', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 app.use(require('./routes'));
@@ -38,15 +42,15 @@ mongoose.connect(global.gConfig.database,
 
 mongoose.set('debug', true);
 
-if(!isProduction) {
+//if(!isProduction) {
 
-  execFile('c:/redis/redis-server.exe', function (error, stdout){
-    if(error){
-      console.log(error);
-    } 
-    console.log('saida', stdout);
-  });
-}
+execFile('c:/redis/redis-server.exe', function (error, stdout){
+  if(error){
+    console.log(error);
+  } 
+  console.log('saida', stdout);
+});
+//}
 
 app.get("*", (req, res) => {
   res.status(404).json({message: 'Rota inexistente'});

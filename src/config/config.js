@@ -22,10 +22,13 @@ const config = {
     "jwt_key": "api-hospital"
   },
   "production": {
-    "config_id": "production",
-    "node_port": 8080,
-    "database": "mongodb://localhost:27017/api-hospital",
-    "jwt_key": "api-hospital"
+    "config_id": "development",
+    "app_name": process.env.APP_NAME,
+    "app_desc": "Api para o aplicativo do hospital",
+    "node_port": process.env.PORT,
+    "database": process.env.DATA_BASE,
+    "jwt_key": process.env.JWT_KEY,
+    "redis_port": process.env.REDIS_PORT 
   }
 }
 

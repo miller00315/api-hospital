@@ -89,6 +89,20 @@ exports.logoutProfissionais = async function(req, res, next) {
   });
 }
 
+exports.getProfissionaisByParameter = async function(req, res, next) {
+  let consulta = {};
+  consulta[req.params.parametro] = new RegExp(req.params.valor,'i');
+
+  Profissionais.find(consulta,
+  function(erro, profissionais){
+      if(erro){
+        res.status(404).send(erro);
+      } else {
+        res.status(200).send(profissionais);
+      }
+  });
+}
+
 exports.currentProfessionais = async function(req, res, next) {
   const { payload: { id } } = req;
 

@@ -16,7 +16,18 @@ const profissional = {
  }
 };
 
-describe("Teste API Hospital", function(){
+const parametros = [{
+  param: 'nome',
+  valor: 'a'
+}, {
+  param: 'sobrenome',
+  valor: 'm'
+}, {
+  param: 'numeroProtocolo',
+  valor: '0'
+}];
+
+describe("Teste API profissionais", function(){
 
   let token;
   before(function(){
@@ -24,7 +35,6 @@ describe("Teste API Hospital", function(){
   });
 
   it("Deve fazer o login", function(done){
-
     chai
       .request(urlBase)//api url base
       .post('/profissionais/login')//rota
@@ -71,6 +81,73 @@ describe("Teste API Hospital", function(){
       .end(function(error, res){
         expect(res.body).to.be.instanceOf(Array);
         expect(res.body).to.have.length.above(0);
+        done();
+      });
+  });
+
+  it("Deve retornar lista pacientes com token", function(done){
+    chai
+      .request(urlBase)
+      .get('/pacientes')
+      .set('Authorization', token)
+      .end(function(error, res) {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.instanceOf(Array);
+        expect(res.body).to.have.length.above(0);
+        done();
+      });
+  })
+
+  parametros.forEach(function(elemento, index){
+    it(`Verificar o parametro ${elemento.param} com o valor ${elemento.valor}`, function(done){
+      chai
+        .request(urlBase)
+        .get(`/pacientes/${elemento.param}/${elemento.valor}`)
+        .set('Authorization', token)
+        .end(function(error, res){
+          if(expect(res.status).to.equal(200)){
+            if(expect(res.body).to.be.instanceOf(Array)){
+              expect(res.body).to.have.length.above(0);
+            }  
+          }
+          done();
+        });
+    })
+  });
+
+  it('Verifica profissional por parametro', function(done){
+    chai
+      .request(urlBase)
+      .get(`/profissionais/nome/c`)
+      .set('Authorization', token)
+      .end(function(error, res){
+        if(expect(res.status).to.equal(200)){
+          if(expect(res.body).to.be.instanceOf(Array)){
+            expect(res.body).to.have.length.above(0);
+          }  
+        }
+      });
+      
+    done();
+  })
+
+  it("Deve retornar 404 rota inválida com token", function(done){
+    chai
+      .request(urlBase)
+      .post('/profissionais/qualquerCoisa')
+      .set('Authorization', token)
+      .end(function(error, res){
+        expect(res.status).to.equal(404);
+        done();
+      });
+  });
+
+  it("Deve retornar 404 rota inválida sem token", function(done){
+    chai
+      .request(urlBase)
+      .post('/profissionais/qualquerCoisa')
+      .end(function(error, res){
+        expect(res.status).to.equal(404);
         done();
       });
   });
