@@ -1,14 +1,14 @@
-require('dotenv').config()
+require('dotenv').config({path: __dirname+'./.env'});
 
 const config = {
   "development": {
     "config_id": "development",
-    "app_name": process.env.APP_NAME,
+    "app_name": "Api-hospital",
     "app_desc": "Api para o aplicativo do hospital",
-    "node_port": process.env.PORT,
-    "database": process.env.DATA_BASE,
-    "jwt_key": process.env.JWT_KEY,
-    "redis_port": process.env.REDIS_PORT 
+    "node_port": 3000,
+    "database": "mongodb://localhost:27017/api-hospital",
+    "jwt_key": "api-hospital",
+    "redis_port": 6379
   },
   "testing": {
     "config_id": "testing",
@@ -23,12 +23,12 @@ const config = {
   },
   "production": {
     "config_id": "development",
-    "app_name": process.env.APP_NAME,
+    "app_name": "Api-hospital",
     "app_desc": "Api para o aplicativo do hospital",
-    "node_port": process.env.PORT,
-    "database": process.env.DATA_BASE,
-    "jwt_key": process.env.JWT_KEY,
-    "redis_port": process.env.REDIS_PORT 
+    "node_port": 3000,
+    "database": "mongodb://localhost:27017/api-hospital",
+    "jwt_key": "api-hospital",
+    "redis_port": 6379
   }
 }
 

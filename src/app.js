@@ -17,8 +17,6 @@ const app = express();//instanciando express
 
 mongoose.Promise = global.Promise;
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 app.use(cors());//aplicando cors
 app.use(helmet());//impedir ataques desconhecidos
 app.use(bodyParser.urlencoded({ extended: false }));//aplicando bodyParser.urlencoded
@@ -42,15 +40,13 @@ mongoose.connect(global.gConfig.database,
 
 mongoose.set('debug', true);
 
-//if(!isProduction) {
-
 execFile('c:/redis/redis-server.exe', function (error, stdout){
   if(error){
     console.log(error);
   } 
   console.log('saida', stdout);
 });
-//}
+
 
 app.get("*", (req, res) => {
   res.status(404).json({message: 'Rota inexistente'});
