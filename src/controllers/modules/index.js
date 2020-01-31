@@ -29,10 +29,12 @@ exports.getModulesByProtocol = async function(req, res, next) {
   });
 
   Promise.all(jobQueries)
-    .then(function(result) {
+    .then(function(values) {
 
-      result.forEach(function(value, index) {
-        console.log(value);
+      let result = [];
+
+      values.forEach(function(value, index) {
+        result.push(_.first(value));
       });
 
       res.status(200).json(result);
