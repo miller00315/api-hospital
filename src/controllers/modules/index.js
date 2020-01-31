@@ -30,6 +30,11 @@ exports.getModulesByProtocol = async function(req, res, next) {
 
   Promise.all(jobQueries)
     .then(function(result) {
+
+      result.forEach(function(value, index) {
+        console.log(value);
+      });
+
       res.status(200).json(result);
     })
     .catch(function(error) {
