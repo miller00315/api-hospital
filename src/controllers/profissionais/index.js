@@ -1,17 +1,18 @@
 const blacklist = require('express-jwt-blacklist');
 const passaport = require('passport');
 const Profissionais = require('../../models/profissionais');
+const _ = require('lodash');
 
 exports.loginProfissionais = async function(req, res, next) {
-  const {body: {profissional}} = req;
+  const {body: {professional}} = req;
 
-  if(!profissional.email) {
+  if(!professional.email) {
     return res.status(422).json({
       email: 'precisamos de um email',
     });
   }
 
-  if(!profissional.password) {
+  if(!professional.password) {
     return res.status(422).json({
       password: 'precisamos de uma senha',
     });
@@ -24,10 +25,10 @@ exports.loginProfissionais = async function(req, res, next) {
       }
 
       if(passaportProfessional) {
-        const profissional = passaportProfessional;
-        profissional.token = passaportProfessional.generateJWT();
+        const professional = passaportProfessional;
+        professional.token = passaportProfessional.generateJWT();
 
-        return res.json({professional: profissional.toAuthJSON()})
+        return res.json({professional: professional.toAuthJSON()})
       }
 
       return  res.status(400).info;
@@ -36,6 +37,7 @@ exports.loginProfissionais = async function(req, res, next) {
 }
 
 exports.getProfissionais = async function(_, res, next) {
+
   Profissionais.find(function(error, profissionais){
     if(error){
       res.status(404).send(error);
@@ -46,27 +48,36 @@ exports.getProfissionais = async function(_, res, next) {
 }
 
 exports.createProfissionais = async function(req, res, next) {
-  const {body: {profissional}} = req;
+  const {body: {professional}} = req;
 
-  if(!profissional.email) {
+  if(!professional) {
+    return res.status(400).send({error: 'Não existe profissional para cadastrar'});
+  }
+
+  if(!professional.email) {
     return res.status(422).json({
       email: 'precisamos de um email',
     });
   }
 
-  if(!profissional.password) {
+  if(!professional.password) {
     return res.status(422).json({
       password: 'precisamos de uma senha',
     });
   }
 
-  const finalProfessional = new Profissionais(profissional);
+  const finalProfessional = new Profissionais(professional);
   
-  finalProfessional.setPassword(profissional.password);
+  finalProfessional.setPassword(professional.password);
 
-  return finalProfessional.save().then(
-    function(){
-      res.json({ profissional: finalProfessional.toAuthJSON()})
+  finalProfessional.save(
+    function(error, document){
+      if(error) {
+        res.status(300).send({error});
+      } else {
+        res.json({ professional: finalProfessional.toAuthJSON()});
+        console.log('salvou', document);
+      }
     }
   );
 }

@@ -26,6 +26,8 @@ router.use(pacientesController.routerError)
 
 .post("*", pacientesController.invalidRoute)
 
-.patch("*", pacientesController.invalidRoute);
+.patch("*", pacientesController.invalidRoute)
+
+.delete("*", pacientesController.invalidRoute);
 
 module.exports = router;

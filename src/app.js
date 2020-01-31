@@ -7,11 +7,51 @@ const compression = require('compression');
 const session = require('express-session');//importação session
 const  mongoose = require('mongoose');// importação mongoose
 const bodyParser = require('body-parser');//importação do body parser
+const seeder = require('mongoose-seed');
 
 require('./config');//importo o arquivo de configuração
 require('./models/profissionais');
 require('./models/pacientes');
 require('./auth/passport');
+
+const sepse = require('./db/protocols/sepse');
+const modules = require('./db/modules');
+const stages = require('./db/stages');
+
+/*
+seeder.connect(global.gConfig.database, function() {
+  seeder.loadModels(
+    [
+      './src/models/protocols', 
+      './src/models/modules', 
+      './src/models/stages'
+    ]
+  );
+
+  let data = [
+    {
+      model: 'protocol',
+      documents: [
+        sepse
+      ]
+    },
+    {
+      model: 'module',
+      documents: modules
+    },
+    {
+      model: 'stage',
+      documents: stages
+    }
+  ]
+  
+  seeder.clearModels(['protocol', 'module', 'stage'], function(){
+    seeder.populateModels(data, function() {
+      seeder.disconnect();
+    });
+  });
+  
+}); */
 
 const app = express();//instanciando express
 
@@ -27,6 +67,8 @@ app.use(session({ secret: 'hospital-api', cookie: { maxAge: 60000 }, resave: fal
 app.use(require('./routes'));
 app.disable('x-powered-by');
 
+//console.log(JSON.stringify(sepse));
+
 mongoose.connect(global.gConfig.database, 
   {useMongoClient: true}, 
   function(erro) {
@@ -39,6 +81,8 @@ mongoose.connect(global.gConfig.database,
 });
 
 mongoose.set('debug', true);
+
+mongoose.Promise = require('bluebird');
 
 execFile('c:/redis/redis-server.exe', function (error, stdout){
   if(error){

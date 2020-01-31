@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
-const Profesionals = mongoose.model('profissional');
+const Professionals = mongoose.model('professional');
 
 passport.use(new LocalStrategy({
-  usernameField: 'profissional[email]',
-  passwordField: 'profissional[password]',
+  usernameField: 'professional[email]',
+  passwordField: 'professional[password]',
 }, (email, password, done) => {
-  Profesionals.findOne({ email })
-    .then((profissional) => {
-      if(!profissional || !profissional.validatePassword(password)) {
+  Professionals.findOne({ email })
+    .then((professional) => {
+      if(!professional || !professional.validatePassword(password)) {
         return done(null, false, { errors: { 'email or password': 'is invalid' } });
       }
-      return done(null, profissional);
+      return done(null, professional);
     }).catch(done);
 }));

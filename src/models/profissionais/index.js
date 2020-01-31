@@ -4,29 +4,27 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const randtoken = require('rand-token');
 
-const ProfisionalSchema = new Schema({
-  nome: String,
-  sobrenome: String,
-  tipo: String,
+const ProfessionalSchema = new Schema({
+  name: String,
+  surname: String,
+  type: String,
   hash: String,
   salt: String,
   email: String,
   token: String,
-}, {
-  usePushEach: true
 });
 
-ProfisionalSchema.methods.setPassword = function(password) {
+ProfessionalSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
-ProfisionalSchema.methods.validatePassword = function(password) {
+ProfessionalSchema.methods.validatePassword = function(password) {
   const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
   return this.hash === hash;
 };
 
-ProfisionalSchema.methods.generateJWT = function() {
+ProfessionalSchema.methods.generateJWT = function() {
 
   const today = new Date();
   const expirationDate = new Date(today);
@@ -42,15 +40,15 @@ ProfisionalSchema.methods.generateJWT = function() {
   return token;
 }
 
-ProfisionalSchema.methods.toAuthJSON = function() {
+ProfessionalSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
     email: this.email,
     token: this.token,
-    tipo: this.tipo,
-    nome: this.nome,
-    sobrenome: this.sobrenome,
+    type: this.type,
+    name: this.name,
+    surname: this.surname,
   };
 };
 
-module.exports = mongoose.model('profissional', ProfisionalSchema);
+module.exports = mongoose.model('professional', ProfessionalSchema);
