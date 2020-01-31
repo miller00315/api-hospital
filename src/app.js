@@ -17,14 +17,18 @@ require('./auth/passport');
 const sepse = require('./db/protocols/sepse');
 const modules = require('./db/modules');
 const stages = require('./db/stages');
+const states = require('./db/states');
+const cities = require('./db/cities');
 
-/*
+
 seeder.connect(global.gConfig.database, function() {
   seeder.loadModels(
     [
       './src/models/protocols', 
       './src/models/modules', 
-      './src/models/stages'
+      './src/models/stages',
+      './src/models/cities',
+      './src/models/states'
     ]
   );
 
@@ -42,16 +46,24 @@ seeder.connect(global.gConfig.database, function() {
     {
       model: 'stage',
       documents: stages
+    },
+    {
+      model: 'city',
+      documents: cities
+    },
+    {
+      model: 'state',
+      documents: states,
     }
   ]
   
-  seeder.clearModels(['protocol', 'module', 'stage'], function(){
+  seeder.clearModels(['protocol', 'module', 'stage', 'city', 'state'], function(){
     seeder.populateModels(data, function() {
       seeder.disconnect();
     });
   });
   
-}); */
+});
 
 const app = express();//instanciando express
 
