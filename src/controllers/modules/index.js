@@ -29,12 +29,12 @@ exports.getModulesByProtocol = async function(req, res, next) {
   });
 
   Promise.all(jobQueries)
-  .then(function(result) {
-    res.status(200).json(result);
-  })
-  .catch(function(error) {
-    res.status(404).json(error);
-  });
+    .then(function(result) {
+      res.status(200).json(result);
+    })
+    .catch(function(error) {
+      res.status(404).json(error);
+    });
 }
 
 exports.invalidRoute = async function(_, res, next){
