@@ -1,7 +1,7 @@
-const Protocols = require('../../models/protocols');
+const States = require('../../models/states');
 
-exports.getProtocols = async function(_, res) {
-  Protocols.find(function(error, result) {
+exports.getStates = async function(_, res) {
+  States.find(function(error, result) {
     if(error) {
       return res.status(400).json({error});
     } else {

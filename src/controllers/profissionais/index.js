@@ -27,22 +27,21 @@ exports.loginProfissionais = async function(req, res, next) {
       if(passaportProfessional) {
         const professional = passaportProfessional;
         professional.token = passaportProfessional.generateJWT();
-
-        return res.json({professional: professional.toAuthJSON()})
+        return res.status(200).json({result: professional.toAuthJSON()})
       }
 
-      return  res.status(400).info;
+      return  res.status(400).json({error: "Usuário não encontrado", professional});
     })(req, res, next);
 
 }
 
 exports.getProfissionais = async function(_, res, next) {
 
-  Profissionais.find(function(error, profissionais){
-    if(error){
-      res.status(404).send(error);
+  Profissionais.find(function(error, result){
+    if(error) {
+      return res.status(400).json({error});
     } else {
-      res.status(200).send(profissionais);
+      return res.status(200).json({result});
     }
   });
 }
@@ -56,13 +55,13 @@ exports.createProfissionais = async function(req, res, next) {
 
   if(!professional.email) {
     return res.status(422).json({
-      email: 'precisamos de um email',
+      error: 'precisamos de um email',
     });
   }
 
   if(!professional.password) {
     return res.status(422).json({
-      password: 'precisamos de uma senha',
+      error: 'precisamos de uma senha',
     });
   }
 
@@ -73,10 +72,9 @@ exports.createProfissionais = async function(req, res, next) {
   finalProfessional.save(
     function(error, document){
       if(error) {
-        res.status(300).send({error});
+        res.status(300).json({error});
       } else {
-        res.json({ professional: finalProfessional.toAuthJSON()});
-        console.log('salvou', document);
+        res.json({ result: finalProfessional.toAuthJSON()});
       }
     }
   );
@@ -87,15 +85,9 @@ exports.logoutProfissionais = async function(req, res, next) {
 
   blacklist.revoke(payload, function(error) {
     if(error) {
-      res.status(500).json({
-        'status': 500,
-        'data': error,
-      });
+      return res.status(400).json({error});
     } else {
-      res.status(200).json({
-        'status': 200,
-        'data': 'You are logged out',
-      });
+      return res.status(200).json({result: 'loged out'});
     }
   });
 }
@@ -104,36 +96,39 @@ exports.getProfissionaisByParameter = async function(req, res, next) {
   let consulta = {};
   consulta[req.params.parametro] = new RegExp(req.params.valor,'i');
 
-  Profissionais.find(consulta,
-  function(erro, profissionais){
-      if(erro){
-        res.status(404).send(erro);
+  Profissionais.find(
+    consulta,
+    function(error, result){
+      if(error) {
+        return res.status(400).json({error});
       } else {
-        res.status(200).send(profissionais);
+        return res.status(200).json({result});
       }
-  });
+    });
 }
 
 exports.currentProfessionais = async function(req, res, next) {
   const { payload: { id } } = req;
 
-  Profissionais.findById(id, function(erro, profissional) {
-    if(erro){
-      res.status(401).send(erro);
-    } else {
-      res.status(200).send(profissional);
-    }
+  Profissionais.findById(
+    id, 
+    function(error, result) {
+      if(error) {
+        return res.status(400).json({error});
+      } else {
+        return res.status(200).json({result});
+      }
   });
 }
 
 exports.deleteProfessionais = async function(req, res, next) {
   Profissionais.findByIdAndRemove(
     req.params.id_profissional,
-    function(erro, resultado) {
-      if(erro) {
-        res.status(404).send(erro);
+    function(error, result) {
+      if(error) {
+        return res.status(400).json({error});
       } else {
-        res.status(200).send(resultado);
+        return res.status(200).json({result});
       }
     }
   );

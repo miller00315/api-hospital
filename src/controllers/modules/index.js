@@ -2,11 +2,11 @@ const Modules = require('../../models/modules');
 const _ = require('lodash');
 
 exports.getModules = async function(_, res) {
-  Modules.find(function(error, modules) {
+  Modules.find(function(error, result) {
     if(error) {
-      res.status(404).send(error);
+      return res.status(400).json({error});
     } else {
-      res.status(200).send(modules);
+      return res.status(200).json({result});
     }
   });
 }

@@ -7,7 +7,8 @@ const compression = require('compression');
 const session = require('express-session');//importação session
 const  mongoose = require('mongoose');// importação mongoose
 const bodyParser = require('body-parser');//importação do body parser
-const seeder = require('mongoose-seed');
+//const seeder = require('mongoose-seed');
+const moment = require('moment-timezone');
 
 require('./config');//importo o arquivo de configuração
 require('./models/profissionais');
@@ -19,8 +20,8 @@ const modules = require('./db/modules');
 const stages = require('./db/stages');
 const states = require('./db/states');
 const cities = require('./db/cities');
-
-
+const genres = require('./db/genres');
+/*
 seeder.connect(global.gConfig.database, function() {
   seeder.loadModels(
     [
@@ -28,7 +29,8 @@ seeder.connect(global.gConfig.database, function() {
       './src/models/modules', 
       './src/models/stages',
       './src/models/cities',
-      './src/models/states'
+      './src/models/states',
+      './src/models/genres'
     ]
   );
 
@@ -54,16 +56,28 @@ seeder.connect(global.gConfig.database, function() {
     {
       model: 'state',
       documents: states,
+    },
+    {
+      model: 'genre',
+      documents: genres,
     }
   ]
   
-  seeder.clearModels(['protocol', 'module', 'stage', 'city', 'state'], function(){
-    seeder.populateModels(data, function() {
-      seeder.disconnect();
+  seeder.clearModels([
+    'protocol', 
+    'module', 
+    'stage', 
+    'city', 
+    'state', 
+    'genre'], function(){
+      seeder.populateModels(data, function() {
+        seeder.disconnect();
     });
   });
   
 });
+
+*/
 
 const app = express();//instanciando express
 
@@ -125,5 +139,11 @@ app.use((erro, req, res, next) => {
 });
 
 app.listen(global.gConfig.node_port, () => {
+  try {
+    moment.locale('pt-br');
+    moment.tz.setDefault('America/Bogota');
+  } catch(e) {
+    console.log(e);
+  }
   console.log(`${global.gConfig.app_name} escutando na porta ${global.gConfig.node_port}`);
 });//iniciando o listener

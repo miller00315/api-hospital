@@ -1,13 +1,15 @@
-const Protocols = require('../../models/protocols');
+const Genres = require('../../models/genres');
 
-exports.getProtocols = async function(_, res) {
-  Protocols.find(function(error, result) {
-    if(error) {
-      return res.status(400).json({error});
-    } else {
-      return res.status(200).json({result});
+exports.getGenres = async function(_, res) {
+  Genres.find(
+    function(error, result) {
+      if(error) {
+        return res.status(404).json({error});
+      } else {
+        return res.status(200).json({result});
+      }
     }
-  });
+  );
 }
 
 exports.invalidRoute = async function(_, res, next){
