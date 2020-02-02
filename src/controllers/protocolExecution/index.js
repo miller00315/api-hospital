@@ -168,7 +168,7 @@ exports.finish = async function(req, res) {
 
   ProtocolExecution.findByIdAndUpdate(
     protocolId,
-    {isExecuting: false, finishedAt: moment().toDate(), finishedBy: user},
+    {isExecuting: false, finishedAt: moment(), finishedBy: user},
     {new: true},
     function(error, result) {
       if(error) {
@@ -191,7 +191,7 @@ exports.restart = async function(req, res) {
 
   ProtocolExecution.findByIdAndUpdate(
     protocolId,
-    {isExecuting: false, restartedAt: moment().toDate(), restartedBy: user},
+    {isExecuting: false, restartedAt: moment(), restartedBy: user},
     {new: true},
     function(error, result) {
       if(error) {

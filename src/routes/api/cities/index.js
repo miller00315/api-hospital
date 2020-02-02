@@ -6,7 +6,7 @@ const auth = require('../../../auth');
 const CitiesController = require('../../../controllers/cities');
 
 router.use(CitiesController.routerError)
-  .get('/:stateCode', CitiesController.getCitiesByState)
+  .get('/stateCode', CitiesController.getCitiesByState)
   .get('*', CitiesController.invalidRoute)
   .patch('*', CitiesController.invalidRoute)
   .put('*', CitiesController.invalidRoute)

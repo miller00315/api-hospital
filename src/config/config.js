@@ -5,7 +5,7 @@ const config = {
     "config_id": "development",
     "app_name": "Api-hospital",
     "app_desc": "Api para o aplicativo do hospital",
-    "node_port": 3000,
+    "node_port": 3001,
     "database": "mongodb://localhost:27017/api-hospital",
     "jwt_key": "api-hospital",
     "redis_port": 6379
@@ -25,7 +25,7 @@ const config = {
     "config_id": "development",
     "app_name": "Api-hospital",
     "app_desc": "Api para o aplicativo do hospital",
-    "node_port": 3000,
+    "node_port": 3001,
     "database": "mongodb://localhost:27017/api-hospital",
     "jwt_key": "api-hospital",
     "redis_port": 6379

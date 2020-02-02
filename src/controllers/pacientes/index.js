@@ -42,13 +42,16 @@ exports.getPacientesByParameter = async function(req, res) {//buscar usuário po
 
 exports.createPacientes = async function(req, res){//inserir novo dado
 
-  let paciente = new Pacientes();
+  const {body: {patient}} = req;
 
-  paciente.nome = req.body.nome;
-  paciente.sobrenome = req.body.sobrenome;
-  paciente.numeroProtocolo = req.body.numeroProtocolo;
+  if(!patient) 
+    return res.status(422).json({error: 'Sem paciente de referência'});
+  
+  let newPatient = new Pacientes(patient);
 
-  paciente.save(
+  newPatient.register_date = new Date();
+
+  newPatient.save(
     function(error, result){
       if(error) {
         return res.status(400).json({error});

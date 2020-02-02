@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const PacienteSchema = new Schema({
+const PatientSchema = new Schema({
   name: String,
   surname: String,
+  register_by: String,
   protocol_number: String,
   genre: String,
-  birth_date: Date,
+  birth_date: String,
   register_date: Date,
   observation: String,
   register: String,
@@ -16,4 +17,9 @@ const PacienteSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('pacientes', PacienteSchema);
+PatientSchema.methods.initialSetup = () => {
+  console.log('teste');
+  this.register_date = new Date();
+}
+
+module.exports = mongoose.model('patient', PatientSchema);

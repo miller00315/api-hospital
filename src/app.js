@@ -14,14 +14,14 @@ require('./config');//importo o arquivo de configuração
 require('./models/profissionais');
 require('./models/pacientes');
 require('./auth/passport');
-
+/*
 const sepse = require('./db/protocols/sepse');
 const modules = require('./db/modules');
 const stages = require('./db/stages');
 const states = require('./db/states');
 const cities = require('./db/cities');
 const genres = require('./db/genres');
-/*
+
 seeder.connect(global.gConfig.database, function() {
   seeder.loadModels(
     [
@@ -141,7 +141,7 @@ app.use((erro, req, res, next) => {
 app.listen(global.gConfig.node_port, () => {
   try {
     moment.locale('pt-br');
-    moment.tz.setDefault('America/Bogota');
+    moment.tz.setDefault('America/Bahia');
   } catch(e) {
     console.log(e);
   }

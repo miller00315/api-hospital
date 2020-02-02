@@ -1,19 +1,25 @@
 const Cities = require('../../models/cities');
 
 exports.getCitiesByState = async function(req, res) {
-  const {stateCode} = req.params;
+  const {stateCode} = req.query;
 
   let query = {};
 
-  query['stateCode'] = new RegExp(stateCode, 'i');
+  if(stateCode === '')
+    return res.status(404).json({error: 'Sem estado de parametro'});
 
-  Cities.find(query, function(error, result) {
-    if(error) {
-      return res.state(404).json({error});
-    } else {
-      return res.state(200).json({result});
-    }
-  });
+  query['stateCode'] = new RegExp(`${stateCode}`, 'i');
+
+  Cities.find(
+    query, 
+    function(error, result) {
+      if(error) {
+        return res.status(404).json({error});
+      } else {
+        console.log(result);
+        return res.status(200).json({result});
+      }
+    });
 }
 
 exports.invalidRoute = async function(_, res, next){

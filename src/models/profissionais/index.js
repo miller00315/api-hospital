@@ -12,11 +12,13 @@ const ProfessionalSchema = new Schema({
   salt: String,
   email: String,
   token: String,
+  createdAt: Date,
 });
 
 ProfessionalSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+  this.createdAt = new Date();
 };
 
 ProfessionalSchema.methods.validatePassword = function(password) {
